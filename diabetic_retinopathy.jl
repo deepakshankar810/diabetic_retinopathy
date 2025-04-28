@@ -6,7 +6,7 @@ using DataFrames
 # (Can be a relative path like this, or an absolute path like "/home/user/data/my_data.csv")
 filepath = "diabetic_retinopathy.csv"
 
-try
+# try
     # Read the CSV file into a DataFrame
     # CSV.read automatically handles headers and tries to infer data types.
     # It also recognizes standard missing values (like the empty field for Charlie).
@@ -22,10 +22,10 @@ try
     # println("Data Types of columns:")
     # println(eltype.(eachcol(df))) # Show inferred types per column #ctrl+forward slash to make it as a command
 
-catch e
-    println("Error reading CSV file: ", filepath)
-    showerror(stdout, e)
-    println()
-end
+# catch e
+#     println("Error reading CSV file: ", filepath)
+#     showerror(stdout, e)
+#     println()
+# end
 
  
