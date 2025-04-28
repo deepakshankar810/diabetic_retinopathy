@@ -14,13 +14,13 @@ try
 
     # Print the DataFrame to see the contents
     println("Successfully read CSV into DataFrame:")
-    println(df)
+    println(df.Hornerin)  #df.Clinical_Group  #only reads that column
 
     # You can now work with the DataFrame 'df'
     # println("\nAccessing data:")
     # println("Value for Bob: ", df[df.Name .== "Bob", :Value][1]) # Example access 
     # println("Data Types of columns:")
-    # println(eltype.(eachcol(df))) # Show inferred types per column
+    # println(eltype.(eachcol(df))) # Show inferred types per column #ctrl+forward slash to make it as a command
 
 catch e
     println("Error reading CSV file: ", filepath)
@@ -28,3 +28,4 @@ catch e
     println()
 end
 
+ 
