@@ -14,7 +14,7 @@ filepath = "diabetic_retinopathy.csv"
 
     # Print the DataFrame to see the contents
     println("Successfully read CSV into DataFrame:")
-    println(df.Hornerin)  #df.Clinical_Group  #only reads that column
+    println(df)  #df.Clinical_Group  #only reads that column
 
     # You can now work with the DataFrame 'df'
     # println("\nAccessing data:")
@@ -28,4 +28,3 @@ filepath = "diabetic_retinopathy.csv"
 #     println()
 # end
 
- 
