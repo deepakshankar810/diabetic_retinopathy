@@ -161,3 +161,19 @@ data_encoded = select(data_encoded, Not([:Gender, :Albuminuria]))  # Use DataFra
 # Verify encoded data
 println("Encoded column names: ", names(data_encoded))
 println("First few rows of encoded data: ", first(data_encoded, 5))
+
+# iii) Feature scaling
+# Select features (excluding Patient_ID and Clinical_Group for X)
+X = select(data_encoded, Not([:Patient_ID, :Clinical_Group]))
+y = data_encoded[!, :Clinical_Group]
+
+# iii) Train-Test Split
+using MLJ: partition
+
+# Split data
+train_idx, test_idx = partition(1:nrow(data_encoded), 0.8, shuffle=true, rng=42)
+X_train = X[train_idx, :]
+X_test = X[test_idx, :]
+y_train = y[train_idx]
+y_test = y[test_idx]
+
