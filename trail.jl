@@ -1,58 +1,66 @@
-println("machine learning")
+using CSV
+using DataFrames
+using Impute
+using StatsBase
+using Random
+using PrettyTables
 
-for i=1:20
-    println(i)
+# Load the dataset
+data = CSV.read("diabetic_retinopathy.csv", DataFrame)
+DataFrames.describe(data)
+
+# # Display basic information
+# println("Dataset Info:")
+# println(describe(data))
+# println("First few rows:")
+# println(first(data, 5))
+
+# # Check class distribution
+# println("Class Distribution:")
+# println(combine(groupby(data, :Clinical_Group), nrow => :count))
+
+for col in names(data)
+    # Replace string "NaN"
+    data[!, col] = replace(data[!, col], "NaN" => missing)
+    # Replace floating-point NaN for numerical columns
+    if eltype(data[!, col]) <: Union{Missing, Number}
+        data[!, col] = map(x -> isequal(x, NaN) ? missing : x, data[!, col])
+    end
 end
 
-#=
-    learning
-    starting with variables
-=#
-x = 13
-typeof(x) # get the type of a variable
+# println(data)
+# missing_data = data 
+# pretty_table(data)
 
-x = x+12
-x= 13; y=12; z=24;
+# CSV.write("diabetic_retinopathy_missing_removed.csv", data)
 
-y=x^6+3*x
+using Statistics  # Required for median calculation
 
-x= "google.com" #assign to variable
-
-typeof(x) #string
-w=3.14
-
-typeof(w) #float
-
-_xyz = 222
-println(_xyz)
-
-α = 3.14; β= 3.22  #\alpha TAB  #\beta TAB
-
-β₀=88   #\beta_0 TAB
-α¹=2.22 #\alpha^1 TAB
-
-π #\pi TAB
-ℯ #\e TAB
-
-# Naming style conventions for varaible names
-
-
-first_name = "deepak"
-last_name = "shankar"
-
-p, q, r= 1, 2, 3 #Assign values to multiple variables
-
-#swap the values of two variables in onE line?
-p,q = q,p #swap the values of p and q
-
-function sum_two_numbers(x::Float64, y::Float64)
-    return x+y
+# Loop through each clinical group
+for group in unique(data[!, :Clinical_Group])
+    # Filter rows for the current group
+    group_mask = data[!, :Clinical_Group] .== group
+    # Calculate median of non-missing Hornerin values for this group
+    group_median = median(skipmissing(data[group_mask, :Hornerin]))
+    # Replace missing Hornerin values in this group with the group median
+    data[group_mask, :Hornerin] = coalesce.(data[group_mask, :Hornerin], group_median)
 end
 
-sum_two_numbers(3.14, 2.22)
+# println(data[!, :Hornerin])
 
-((8+8)*2)::Int64 #::Int64 withoutdecimal point
-((8+8)*2.0)::Float64 #::Float64 with decimal point
+using Statistics  # Required for median calculation
 
+# Loop through each clinical group
+for group in unique(data[!, :Clinical_Group])
+    # Filter rows for the current group
+    group_mask = data[!, :Clinical_Group] .== group
+    # Calculate median of non-missing SFN values for this group
+    group_median = median(skipmissing(data[group_mask, :SFN]))
+    # Replace missing SFN values in this group with the group median
+    data[group_mask, :SFN] = coalesce.(data[group_mask, :SFN], group_median)
+end
 
-const MYHANDLE = "Gmail"
+println(data[!, :SFN])
+
+# Save the cleaned dataset
+CSV.write("diabetic_retinopathy_missing_removed_cleaned.csv", data)
