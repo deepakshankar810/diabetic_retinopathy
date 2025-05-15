@@ -184,6 +184,19 @@ end
 
 # println(data[!, :T_Bil])
 
+# Loop through each clinical group for FBS
+for group in unique(data[!, :Clinical_Group])
+    # Filter rows for the current group
+    group_mask = data[!, :Clinical_Group] .== group
+    # Calculate median of non-missing FBS values for this group
+    group_median = median(skipmissing(data[group_mask, :FBS]))
+    # Replace missing FBS values in this group with the group median
+    data[group_mask, :FBS] = coalesce.(data[group_mask, :FBS], group_median)
+end
+
+# println(data[!, :FBS])
+
+
 # # Loop through each clinical group for Chol_HDL_ratio
 # for group in unique(data[!, :Clinical_Group])
 #     # Filter rows for the current group
