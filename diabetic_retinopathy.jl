@@ -153,11 +153,7 @@ for col in names(data)
     println("Column: $col, NaN count: $nan_count, Missing count: $missing_count")
 end
 
-# Format HDL, LDL, Chol_HDL_ratio to one decimal place for CSV output
-format_cols = [:HDL, :LDL, :Chol_HDL_ratio]
-for col in format_cols
-    data[!, col] = map(x -> ismissing(x) ? missing : round(x, digits=1), data[!, col])
-end
+
 
 # Save the cleaned dataset
 CSV.write("diabetic_retinopathy_fully_cleaned.csv", data)
