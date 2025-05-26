@@ -26,9 +26,9 @@ data = CSV.read("diabetic_retinopathy_old.csv", DataFrame,
 # end
 
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect unique values in Albuminuria
 # println("Unique values in Albuminuria before recoding:")
@@ -101,9 +101,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Albuminuria]) |> x -> show(first(x,
 # Optional: Save the updated DataFrame
 CSV.write("diabetic_retinopathy_cleaned_step2.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Hornerin column
 println("Summary of Hornerin before imputation:")
@@ -155,9 +155,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :Albuminuria]) |> x -> sh
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect SFN column
 println("Summary of SFN before imputation:")
@@ -259,9 +259,9 @@ println("Mean: ", mean(data[!, :Age]))
 # Display first 5 rows to verify Age
 println
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Diabetic_Duration column
 println("Summary of Diabetic_Duration before imputation:")
@@ -313,9 +313,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect eGFR column
 println("Summary of eGFR before imputation:")
@@ -367,9 +367,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect EAG column
 println("Summary of EAG before imputation:")
@@ -421,9 +421,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect FBS column
 println("Summary of FBS before imputation:")
@@ -475,9 +475,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect RBS column
 println("Summary of RBS before imputation:")
@@ -529,9 +529,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect HbA1C column
 println("Summary of HbA1C before imputation:")
@@ -583,9 +583,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Systolic_BP column
 println("Summary of Systolic_BP before imputation:")
@@ -637,9 +637,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step2.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Diastolic_BP column
 println("Summary of Diastolic_BP before imputation:")
@@ -691,9 +691,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect BUN column
 println("Summary of BUN before imputation:")
@@ -745,9 +745,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Total_Protein column
 println("Summary of Total_Protein before imputation:")
@@ -799,9 +799,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Serum_Albumin column
 println("Summary of Serum_Albumin before imputation:")
@@ -853,9 +853,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Serum_Creatinine column
 println("Summary of Serum_Creatinine before imputation:")
@@ -907,9 +907,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect CHOL column
 println("Summary of CHOL before imputation:")
@@ -961,9 +961,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect TG column
 println("Summary of TG before imputation:")
@@ -1015,9 +1015,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect HDL column
 println("Summary of HDL before imputation:")
@@ -1069,9 +1069,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect LDL column
 println("Summary of LDL before imputation:")
@@ -1123,9 +1123,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Chol_HDL_ratio column
 println("Summary of Chol_HDL_ratio before imputation:")
@@ -1234,9 +1234,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+    # using DataFrames
+    # using Statistics
+    # using StatsBase
 
 # Step 1: Inspect Serum_Globulin column
 println("Summary of Serum_Globulin before imputation:")
@@ -1288,9 +1288,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect AG_Ratio column
 println("Summary of AG_Ratio before imputation:")
@@ -1342,9 +1342,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Sodium column
 println("Summary of Sodium before imputation:")
@@ -1396,9 +1396,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Potassium column
 println("Summary of Potassium before imputation:")
@@ -1450,9 +1450,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Chloride column
 println("Summary of Chloride before imputation:")
@@ -1504,9 +1504,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Chloride column
 println("Summary of Chloride before imputation:")
@@ -1559,9 +1559,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect SGOT column
 println("Summary of SGOT before imputation:")
@@ -1614,9 +1614,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect SGPT column
 println("Summary of SGPT before imputation:")
@@ -1668,9 +1668,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect Alkaline_Phosphatase column
 println("Summary of Alkaline_Phosphatase before imputation:")
@@ -1722,9 +1722,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect T_Bil column
 println("Summary of T_Bil before imputation:")
@@ -1776,9 +1776,9 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
-using DataFrames
-using Statistics
-using StatsBase
+# using DataFrames
+# using Statistics
+# using StatsBase
 
 # Step 1: Inspect D_Bil column
 println("Summary of D_Bil before imputation:")
@@ -1830,6 +1830,116 @@ select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Dur
 # Optional: Save the updated DataFrame
 # CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
+
+# using DataFrames
+# using Statistics
+# using StatsBase
+
+# Step 1: Inspect Bicarbonate column
+println("Summary of Bicarbonate before imputation:")
+println("Missing values in Bicarbonate: ", sum(ismissing.(data[!, :Bicarbonate])))
+println("Non-missing Bicarbonate values (min, max, mean):")
+if sum(.!ismissing.(data[!, :Bicarbonate])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :Bicarbonate])))
+    println("Max: ", maximum(skipmissing(data[!, :Bicarbonate])))
+    println("Mean: ", mean(skipmissing(data[!, :Bicarbonate])))
+else
+    println("No non-missing values in Bicarbonate")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median Bicarbonate for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :Bicarbonate => (x -> median(skipmissing(x))) => :Bicarbonate_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.Bicarbonate_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian Bicarbonate by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing Bicarbonate based on group median
+function impute_Bicarbonate(row)
+    if ismissing(row.Bicarbonate)
+        return round(median_dict[row.Clinical_Group], digits=1)  # Round to 1 decimal place
+    else
+        return row.Bicarbonate
+    end
+end
+
+# Apply imputation
+data[!, :Bicarbonate] = impute_Bicarbonate.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of Bicarbonate after imputation:")
+println("Missing values in Bicarbonate: ", sum(ismissing.(data[!, :Bicarbonate])))
+println("Bicarbonate values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :Bicarbonate]))
+println("Max: ", maximum(data[!, :Bicarbonate]))
+println("Mean: ", mean(data[!, :Bicarbonate]))
+
+# Display first 5 rows to verify Bicarbonate
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :SGOT, :SGPT, :Alkaline_Phosphatase, :T_Bil, :D_Bil, :Bicarbonate, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+# using DataFrames
+# using Statistics
+# using StatsBase
+
+# Step 1: Inspect Gender column
+println("Summary of Gender before recoding:")
+println("Unique values in Gender: ", unique(skipmissing(data[!, :Gender])))
+println("Missing values in Gender: ", sum(ismissing.(data[!, :Gender])))
+println("Value counts in Gender:")
+println(combine(groupby(data, :Gender, skipmissing=true), nrow => :count))
+
+# Step 2: Recode Gender (M -> 0, F -> 1)
+function recode_gender(gender)
+    if ismissing(gender)
+        return missing  # Preserve missing values for now
+    elseif gender == "M" || gender == "m"
+        return 0
+    elseif gender == "F" || gender == "f"
+        return 1
+    else
+        println("Unexpected value in Gender: ", gender)
+        return missing  # Mark unexpected values as missing
+    end
+end
+
+# Apply recoding
+data[!, :Gender] = recode_gender.(data[!, :Gender])
+
+# Step 3: Check for missing values after recoding
+println("\nChecking for missing values in Gender after recoding:")
+println("Missing values in Gender: ", sum(ismissing.(data[!, :Gender])))
+
+# If there are missing values, impute with mode (most frequent value)
+if sum(ismissing.(data[!, :Gender])) > 0
+    mode_gender = mode(skipmissing(data[!, :Gender]))
+    println("Imputing ", sum(ismissing.(data[!, :Gender])), " missing Gender values with mode: ", mode_gender)
+    data[!, :Gender] = coalesce.(data[!, :Gender], mode_gender)
+end
+
+# Step 4: Verify recoding
+println("\nSummary of Gender after recoding:")
+println("Unique values in Gender: ", unique(data[!, :Gender]))
+println("Value counts in Gender:")
+println(combine(groupby(data, :Gender), nrow => :count))
+
+# Display first 5 rows to verify Gender
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Gender, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Bicarbonate, :SGOT, :SGPT, :Alkaline_Phosphatase, :T_Bil, :D_Bil, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
 # Optional: Save the updated DataFrame
 CSV.write("diabetic_retinopathy_cleaned_step_data.csv", data)
+
+# # Check for missing values in each column
+# for col in names(data)
+#     missing_count = sum(ismissing.(data[!, col]))
+#     println("Missing values in $col: $missing_count")
+# end
 
