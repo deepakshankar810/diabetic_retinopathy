@@ -11,19 +11,19 @@ using StatsBase
 data = CSV.read("diabetic_retinopathy_old.csv", DataFrame, 
                 missingstring=["NaN", "Nil", "NIL", "-", ""])
 
-# Display the first 5 rows to verify loading
-println("First 5 rows of the dataset:")
-show(first(data, 5), allcols=true)
+# # Display the first 5 rows to verify loading
+# println("First 5 rows of the dataset:")
+# show(first(data, 5), allcols=true)
 
-# Display column names to check for any whitespace issues
-println("\nColumn names:")
-println(names(data))
+# # Display column names to check for any whitespace issues
+# println("\nColumn names:")
+# println(names(data))
 
-# Summarize missing values per column
-println("\nMissing values per column:")
-for col in names(data)
-    println("$col: $(sum(ismissing.(data[!, col])))")
-end
+# # Summarize missing values per column
+# println("\nMissing values per column:")
+# for col in names(data)
+#     println("$col: $(sum(ismissing.(data[!, col])))")
+# end
 
 
 using DataFrames
@@ -31,8 +31,8 @@ using Statistics
 using StatsBase
 
 # Step 1: Inspect unique values in Albuminuria
-println("Unique values in Albuminuria before recoding:")
-println(unique(data[!, :Albuminuria]))
+# println("Unique values in Albuminuria before recoding:")
+# println(unique(data[!, :Albuminuria]))
 
 # Step 2: Recode Albuminuria
 function recode_albuminuria(value)
@@ -71,8 +71,8 @@ group_medians = combine(groupby(data, :Clinical_Group), :Albuminuria => (x -> me
 median_dict = Dict(row.Clinical_Group => row.Albuminuria_median for row in eachrow(group_medians))
 
 # Print medians for verification
-println("\nMedian Albuminuria by Clinical_Group:")
-println(median_dict)
+# println("\nMedian Albuminuria by Clinical_Group:")
+# println(median_dict)
 
 # Function to impute missing Albuminuria based on group median
 function impute_albuminuria(row)
@@ -1231,8 +1231,605 @@ println("Mean: ", mean(data[!, :HB]))
 println("\nFirst 5 rows of the dataset (selected columns):")
 select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
 
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
 
+using DataFrames
+using Statistics
+using StatsBase
 
+# Step 1: Inspect Serum_Globulin column
+println("Summary of Serum_Globulin before imputation:")
+println("Missing values in Serum_Globulin: ", sum(ismissing.(data[!, :Serum_Globulin])))
+println("Non-missing Serum_Globulin values (min, max, mean):")
+if sum(.!ismissing.(data[!, :Serum_Globulin])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :Serum_Globulin])))
+    println("Max: ", maximum(skipmissing(data[!, :Serum_Globulin])))
+    println("Mean: ", mean(skipmissing(data[!, :Serum_Globulin])))
+else
+    println("No non-missing values in Serum_Globulin")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median Serum_Globulin for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :Serum_Globulin => (x -> median(skipmissing(x))) => :Serum_Globulin_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.Serum_Globulin_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian Serum_Globulin by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing Serum_Globulin based on group median
+function impute_serum_globulin(row)
+    if ismissing(row.Serum_Globulin)
+        return round(median_dict[row.Clinical_Group], digits=1)  # Round to 1 decimal place
+    else
+        return row.Serum_Globulin
+    end
+end
+
+# Apply imputation
+data[!, :Serum_Globulin] = impute_serum_globulin.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of Serum_Globulin after imputation:")
+println("Missing values in Serum_Globulin: ", sum(ismissing.(data[!, :Serum_Globulin])))
+println("Serum_Globulin values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :Serum_Globulin]))
+println("Max: ", maximum(data[!, :Serum_Globulin]))
+println("Mean: ", mean(data[!, :Serum_Globulin]))
+
+# Display first 5 rows to verify Serum_Globulin
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
 
 # Optional: Save the updated DataFrame
-CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect AG_Ratio column
+println("Summary of AG_Ratio before imputation:")
+println("Missing values in AG_Ratio: ", sum(ismissing.(data[!, :AG_Ratio])))
+println("Non-missing AG_Ratio values (min, max, mean):")
+if sum(.!ismissing.(data[!, :AG_Ratio])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :AG_Ratio])))
+    println("Max: ", maximum(skipmissing(data[!, :AG_Ratio])))
+    println("Mean: ", mean(skipmissing(data[!, :AG_Ratio])))
+else
+    println("No non-missing values in AG_Ratio")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median AG_Ratio for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :AG_Ratio => (x -> median(skipmissing(x))) => :AG_Ratio_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.AG_Ratio_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian AG_Ratio by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing AG_Ratio based on group median
+function impute_ag_ratio(row)
+    if ismissing(row.AG_Ratio)
+        return round(median_dict[row.Clinical_Group], digits=1)  # Round to 1 decimal place
+    else
+        return row.AG_Ratio
+    end
+end
+
+# Apply imputation
+data[!, :AG_Ratio] = impute_ag_ratio.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of AG_Ratio after imputation:")
+println("Missing values in AG_Ratio: ", sum(ismissing.(data[!, :AG_Ratio])))
+println("AG_Ratio values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :AG_Ratio]))
+println("Max: ", maximum(data[!, :AG_Ratio]))
+println("Mean: ", mean(data[!, :AG_Ratio]))
+
+# Display first 5 rows to verify AG_Ratio
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect Sodium column
+println("Summary of Sodium before imputation:")
+println("Missing values in Sodium: ", sum(ismissing.(data[!, :Sodium])))
+println("Non-missing Sodium values (min, max, mean):")
+if sum(.!ismissing.(data[!, :Sodium])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :Sodium])))
+    println("Max: ", maximum(skipmissing(data[!, :Sodium])))
+    println("Mean: ", mean(skipmissing(data[!, :Sodium])))
+else
+    println("No non-missing values in Sodium")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median Sodium for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :Sodium => (x -> median(skipmissing(x))) => :Sodium_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.Sodium_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian Sodium by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing Sodium based on group median
+function impute_sodium(row)
+    if ismissing(row.Sodium)
+        return Int(round(median_dict[row.Clinical_Group]))  # Round to nearest integer
+    else
+        return row.Sodium
+    end
+end
+
+# Apply imputation
+data[!, :Sodium] = impute_sodium.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of Sodium after imputation:")
+println("Missing values in Sodium: ", sum(ismissing.(data[!, :Sodium])))
+println("Sodium values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :Sodium]))
+println("Max: ", maximum(data[!, :Sodium]))
+println("Mean: ", mean(data[!, :Sodium]))
+
+# Display first 5 rows to verify Sodium
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect Potassium column
+println("Summary of Potassium before imputation:")
+println("Missing values in Potassium: ", sum(ismissing.(data[!, :Potassium])))
+println("Non-missing Potassium values (min, max, mean):")
+if sum(.!ismissing.(data[!, :Potassium])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :Potassium])))
+    println("Max: ", maximum(skipmissing(data[!, :Potassium])))
+    println("Mean: ", mean(skipmissing(data[!, :Potassium])))
+else
+    println("No non-missing values in Potassium")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median Potassium for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :Potassium => (x -> median(skipmissing(x))) => :Potassium_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.Potassium_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian Potassium by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing Potassium based on group median
+function impute_potassium(row)
+    if ismissing(row.Potassium)
+        return round(median_dict[row.Clinical_Group], digits=1)  # Round to 1 decimal place
+    else
+        return row.Potassium
+    end
+end
+
+# Apply imputation
+data[!, :Potassium] = impute_potassium.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of Potassium after imputation:")
+println("Missing values in Potassium: ", sum(ismissing.(data[!, :Potassium])))
+println("Potassium values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :Potassium]))
+println("Max: ", maximum(data[!, :Potassium]))
+println("Mean: ", mean(data[!, :Potassium]))
+
+# Display first 5 rows to verify Potassium
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect Chloride column
+println("Summary of Chloride before imputation:")
+println("Missing values in Chloride: ", sum(ismissing.(data[!, :Chloride])))
+println("Non-missing Chloride values (min, max, mean):")
+if sum(.!ismissing.(data[!, :Chloride])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :Chloride])))
+    println("Max: ", maximum(skipmissing(data[!, :Chloride])))
+    println("Mean: ", mean(skipmissing(data[!, :Chloride])))
+else
+    println("No non-missing values in Chloride")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median Chloride for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :Chloride => (x -> median(skipmissing(x))) => :Chloride_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.Chloride_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian Chloride by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing Chloride based on group median
+function impute_chloride(row)
+    if ismissing(row.Chloride)
+        return Int(round(median_dict[row.Clinical_Group]))  # Round to nearest integer
+    else
+        return row.Chloride
+    end
+end
+
+# Apply imputation
+data[!, :Chloride] = impute_chloride.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of Chloride after imputation:")
+println("Missing values in Chloride: ", sum(ismissing.(data[!, :Chloride])))
+println("Chloride values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :Chloride]))
+println("Max: ", maximum(data[!, :Chloride]))
+println("Mean: ", mean(data[!, :Chloride]))
+
+# Display first 5 rows to verify Chloride
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect Chloride column
+println("Summary of Chloride before imputation:")
+println("Missing values in Chloride: ", sum(ismissing.(data[!, :Chloride])))
+println("Non-missing Chloride values (min, max, mean):")
+if sum(.!ismissing.(data[!, :Chloride])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :Chloride])))
+    println("Max: ", maximum(skipmissing(data[!, :Chloride])))
+    println("Mean: ", mean(skipmissing(data[!, :Chloride])))
+else
+    println("No non-missing values in Chloride")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median Chloride for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :Chloride => (x -> median(skipmissing(x))) => :Chloride_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.Chloride_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian Chloride by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing Chloride based on group median
+function impute_chloride(row)
+    if ismissing(row.Chloride)
+        return Int(round(median_dict[row.Clinical_Group]))  # Round to nearest integer
+    else
+        return row.Chloride
+    end
+end
+
+# Apply imputation
+data[!, :Chloride] = impute_chloride.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of Chloride after imputation:")
+println("Missing values in Chloride: ", sum(ismissing.(data[!, :Chloride])))
+println("Chloride values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :Chloride]))
+println("Max: ", maximum(data[!, :Chloride]))
+println("Mean: ", mean(data[!, :Chloride]))
+
+# Display first 5 rows to verify Chloride
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect SGOT column
+println("Summary of SGOT before imputation:")
+println("Missing values in SGOT: ", sum(ismissing.(data[!, :SGOT])))
+println("Non-missing SGOT values (min, max, mean):")
+if sum(.!ismissing.(data[!, :SGOT])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :SGOT])))
+    println("Max: ", maximum(skipmissing(data[!, :SGOT])))
+    println("Mean: ", mean(skipmissing(data[!, :SGOT])))
+else
+    println("No non-missing values in SGOT")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median SGOT for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :SGOT => (x -> median(skipmissing(x))) => :SGOT_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.SGOT_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian SGOT by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing SGOT based on group median
+function impute_sgot(row)
+    if ismissing(row.SGOT)
+        return Int(round(median_dict[row.Clinical_Group]))  # Round to nearest integer
+    else
+        return row.SGOT
+    end
+end
+
+# Apply imputation
+data[!, :SGOT] = impute_sgot.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of SGOT after imputation:")
+println("Missing values in SGOT: ", sum(ismissing.(data[!, :SGOT])))
+println("SGOT values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :SGOT]))
+println("Max: ", maximum(data[!, :SGOT]))
+println("Mean: ", mean(data[!, :SGOT]))
+
+# Display first 5 rows to verify SGOT
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Bicarbonate, :SGOT, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect SGPT column
+println("Summary of SGPT before imputation:")
+println("Missing values in SGPT: ", sum(ismissing.(data[!, :SGPT])))
+println("Non-missing SGPT values (min, max, mean):")
+if sum(.!ismissing.(data[!, :SGPT])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :SGPT])))
+    println("Max: ", maximum(skipmissing(data[!, :SGPT])))
+    println("Mean: ", mean(skipmissing(data[!, :SGPT])))
+else
+    println("No non-missing values in SGPT")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median SGPT for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :SGPT => (x -> median(skipmissing(x))) => :SGPT_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.SGPT_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian SGPT by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing SGPT based on group median
+function impute_sgpt(row)
+    if ismissing(row.SGPT)
+        return Int(round(median_dict[row.Clinical_Group]))  # Round to nearest integer
+    else
+        return row.SGPT
+    end
+end
+
+# Apply imputation
+data[!, :SGPT] = impute_sgpt.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of SGPT after imputation:")
+println("Missing values in SGPT: ", sum(ismissing.(data[!, :SGPT])))
+println("SGPT values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :SGPT]))
+println("Max: ", maximum(data[!, :SGPT]))
+println("Mean: ", mean(data[!, :SGPT]))
+
+# Display first 5 rows to verify SGPT
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Bicarbonate, :SGOT, :SGPT, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect Alkaline_Phosphatase column
+println("Summary of Alkaline_Phosphatase before imputation:")
+println("Missing values in Alkaline_Phosphatase: ", sum(ismissing.(data[!, :Alkaline_Phosphatase])))
+println("Non-missing Alkaline_Phosphatase values (min, max, mean):")
+if sum(.!ismissing.(data[!, :Alkaline_Phosphatase])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :Alkaline_Phosphatase])))
+    println("Max: ", maximum(skipmissing(data[!, :Alkaline_Phosphatase])))
+    println("Mean: ", mean(skipmissing(data[!, :Alkaline_Phosphatase])))
+else
+    println("No non-missing values in Alkaline_Phosphatase")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median Alkaline_Phosphatase for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :Alkaline_Phosphatase => (x -> median(skipmissing(x))) => :Alkaline_Phosphatase_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.Alkaline_Phosphatase_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian Alkaline_Phosphatase by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing Alkaline_Phosphatase based on group median
+function impute_alkaline_phosphatase(row)
+    if ismissing(row.Alkaline_Phosphatase)
+        return Int(round(median_dict[row.Clinical_Group]))  # Round to nearest integer
+    else
+        return row.Alkaline_Phosphatase
+    end
+end
+
+# Apply imputation
+data[!, :Alkaline_Phosphatase] = impute_alkaline_phosphatase.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of Alkaline_Phosphatase after imputation:")
+println("Missing values in Alkaline_Phosphatase: ", sum(ismissing.(data[!, :Alkaline_Phosphatase])))
+println("Alkaline_Phosphatase values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :Alkaline_Phosphatase]))
+println("Max: ", maximum(data[!, :Alkaline_Phosphatase]))
+println("Mean: ", mean(data[!, :Alkaline_Phosphatase]))
+
+# Display first 5 rows to verify Alkaline_Phosphatase
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Bicarbonate, :SGOT, :SGPT, :Alkaline_Phosphatase, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect T_Bil column
+println("Summary of T_Bil before imputation:")
+println("Missing values in T_Bil: ", sum(ismissing.(data[!, :T_Bil])))
+println("Non-missing T_Bil values (min, max, mean):")
+if sum(.!ismissing.(data[!, :T_Bil])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :T_Bil])))
+    println("Max: ", maximum(skipmissing(data[!, :T_Bil])))
+    println("Mean: ", mean(skipmissing(data[!, :T_Bil])))
+else
+    println("No non-missing values in T_Bil")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median T_Bil for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :T_Bil => (x -> median(skipmissing(x))) => :T_Bil_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.T_Bil_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian T_Bil by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing T_Bil based on group median
+function impute_t_bil(row)
+    if ismissing(row.T_Bil)
+        return round(median_dict[row.Clinical_Group], digits=1)  # Round to 1 decimal place
+    else
+        return row.T_Bil
+    end
+end
+
+# Apply imputation
+data[!, :T_Bil] = impute_t_bil.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of T_Bil after imputation:")
+println("Missing values in T_Bil: ", sum(ismissing.(data[!, :T_Bil])))
+println("T_Bil values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :T_Bil]))
+println("Max: ", maximum(data[!, :T_Bil]))
+println("Mean: ", mean(data[!, :T_Bil]))
+
+# Display first 5 rows to verify T_Bil
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Bicarbonate, :SGOT, :SGPT, :Alkaline_Phosphatase, :T_Bil, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+using DataFrames
+using Statistics
+using StatsBase
+
+# Step 1: Inspect D_Bil column
+println("Summary of D_Bil before imputation:")
+println("Missing values in D_Bil: ", sum(ismissing.(data[!, :D_Bil])))
+println("Non-missing D_Bil values (min, max, mean):")
+if sum(.!ismissing.(data[!, :D_Bil])) > 0
+    println("Min: ", minimum(skipmissing(data[!, :D_Bil])))
+    println("Max: ", maximum(skipmissing(data[!, :D_Bil])))
+    println("Mean: ", mean(skipmissing(data[!, :D_Bil])))
+else
+    println("No non-missing values in D_Bil")
+end
+
+# Step 2: Impute missing values with group median
+# Compute median D_Bil for each Clinical_Group
+group_medians = combine(groupby(data, :Clinical_Group), :D_Bil => (x -> median(skipmissing(x))) => :D_Bil_median)
+
+# Create a dictionary for group medians
+median_dict = Dict(row.Clinical_Group => row.D_Bil_median for row in eachrow(group_medians))
+
+# Print medians for verification
+println("\nMedian D_Bil by Clinical_Group:")
+println(median_dict)
+
+# Function to impute missing D_Bil based on group median
+function impute_d_bil(row)
+    if ismissing(row.D_Bil)
+        return round(median_dict[row.Clinical_Group], digits=1)  # Round to 1 decimal place
+    else
+        return row.D_Bil
+    end
+end
+
+# Apply imputation
+data[!, :D_Bil] = impute_d_bil.(eachrow(data))
+
+# Step 3: Verify changes
+println("\nSummary of D_Bil after imputation:")
+println("Missing values in D_Bil: ", sum(ismissing.(data[!, :D_Bil])))
+println("D_Bil values (min, max, mean after imputation):")
+println("Min: ", minimum(data[!, :D_Bil]))
+println("Max: ", maximum(data[!, :D_Bil]))
+println("Mean: ", mean(data[!, :D_Bil]))
+
+# Display first 5 rows to verify D_Bil
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Hornerin, :SFN, :Age, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Bicarbonate, :SGOT, :SGPT, :Alkaline_Phosphatase, :T_Bil, :D_Bil, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+# CSV.write("diabetic_retinopathy_cleaned_step3.csv", data)
+
+# Optional: Save the updated DataFrame
+CSV.write("diabetic_retinopathy_cleaned_step_data.csv", data)
+
