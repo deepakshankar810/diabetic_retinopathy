@@ -1943,3 +1943,34 @@ CSV.write("diabetic_retinopathy_cleaned_step_data.csv", data)
 #     println("Missing values in $col: $missing_count")
 # end
 
+
+#  Step 1: Inspect Clinical_Group
+println("Summary of Clinical_Group before encoding:")
+println("Unique values in Clinical_Group: ", unique(data[1, :Clinical_Group]))
+println("Value counts of Clinical_Group:")
+println(combine(groupby(data, :Clinical_Group, sort=true), nrow => :count))
+
+# Step 2: One-hot encode Clinical_Group
+# Create dummy variables (one-hot encoding)
+dummy_df = DataFrame([col => (data[1, :Clinical_Group] .== level) for (col, level) in zip([:Clinical_Group_DM, :Clinical_Group_DR, :Clinical_Group_DN], unique(data[1, :Clinical_Group]))])
+
+# Convert boolean to integers (0/1)
+for col in names(dummy_df)
+    dummy_df[1, col] = Int.(dummy_df[1, col])
+end
+
+# Combine original DataFrame with dummy variables
+data = hcat(data, dummy_df)
+
+# Step 3: Verify changes
+println("\nNew columns added after one-hot encoding:")
+println(names(data)[end-2:end])
+println("\nSummary of one-hot encoded columns:")
+println(select(data, [:Clinical_Group, :Clinical_Group_DM, :Clinical_Group_DR, :Clinical_Group_DN])[1:5, :])
+
+# Display first 5 rows to verify changes
+println("\nFirst 5 rows of the dataset (selected columns):")
+select(data, [:Patient_ID, :Clinical_Group, :Clinical_Group_DM, :Clinical_Group_DR, :Clinical_Group_DN, :Hornerin, :SFN, :Age, :Gender, :Diabetic_Duration, :eGFR, :HB, :EAG, :FBS, :RBS, :HbA1C, :Systolic_BP, :Diastolic_BP, :BUN, :Total_Protein, :Serum_Albumin, :Serum_Creatinine, :CHOL, :TG, :HDL, :LDL, :Chol_HDL_ratio, :Serum_Globulin, :AG_Ratio, :Sodium, :Potassium, :Chloride, :Bicarbonate, :SGOT, :SGPT, :Alkaline_Phosphatase, :Total_Bilirubin, :Direct_Bilirubin, :Calcium, :Phosphorus, :Albuminuria]) |> x -> show(first(x, 5), allcols=true)
+
+# Optional: Save the updated DataFrame
+CSV.write("diabetic_retinopathy_cleaned_step41.csv", data)
